@@ -67,6 +67,25 @@
 #         self.right = right
 class Solution:
     def createBinaryTree(self, descriptions: List[List[int]]) -> Optional[TreeNode]:
-        
+        nodes = dict()
+        children = set()
+
+        for parent, child, isLeft in descriptions:
+            if parent not in nodes:
+                nodes[parent] = TreeNode(parent)
+            if child not in nodes:
+                nodes[child] = TreeNode(child)
+
+            if isLeft:
+                nodes[parent].left = nodes[child]
+            else:
+                nodes[parent].right = nodes[child]
+
+            children.add(child)
+
+        # root never appears as a child
+        for val in nodes:
+            if val not in children:
+                return nodes[val]
 # @lc code=end
 
