@@ -56,6 +56,28 @@
 #         self.right = right
 class Solution:
     def balanceBST(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
-        
+        # Step 1: in-order traversal → sorted array
+        nums = []
+        def inorder(node):
+            if not node:
+                return
+            inorder(node.left)
+            nums.append(node.val)
+            inorder(node.right)
+
+        inorder(root)
+
+        # Step 2: recursively pick left-biased mid as root of each subarray
+        def build(lo, hi):
+            if lo > hi:
+                return None
+            mid = (lo + hi) // 2   # even-length → left-of-center; odd-length → true center
+            node = TreeNode(nums[mid])
+            node.left = build(lo, mid - 1)
+            node.right = build(mid + 1, hi)
+            return node
+
+        return build(0, len(nums) - 1)
+   
 # @lc code=end
 
