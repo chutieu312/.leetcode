@@ -49,35 +49,40 @@
 
 # @lc code=start
 # Definition for a binary tree node.
+from typing import Optional
+
+
 # class TreeNode:
 #     def __init__(self, val=0, left=None, right=None):
 #         self.val = val
 #         self.left = left
 #         self.right = right
+        
 class Solution:
     def balanceBST(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
-        # Step 1: in-order traversal → sorted array
+
+        # step 1
         nums = []
+        
         def inorder(node):
             if not node:
                 return
             inorder(node.left)
             nums.append(node.val)
             inorder(node.right)
-
+            
         inorder(root)
-
-        # Step 2: recursively pick left-biased mid as root of each subarray
-        def build(lo, hi):
-            if lo > hi:
+        
+        def build(lo,hi):
+            if lo>hi:
                 return None
-            mid = (lo + hi) // 2   # even-length → left-of-center; odd-length → true center
+            mid = (lo + hi)//2
             node = TreeNode(nums[mid])
-            node.left = build(lo, mid - 1)
+            node.left = build(lo,mid - 1)
             node.right = build(mid + 1, hi)
+            
             return node
-
+        
         return build(0, len(nums) - 1)
-   
+        
 # @lc code=end
-
