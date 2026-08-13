@@ -9,7 +9,7 @@
 | 206 | Reverse Linked List | Linked Lists |
 | 104 | Maximum Depth of Binary Tree | Trees / DFS |
 | 70 | Climbing Stairs | DP (Fibonacci) |
-| 121 | Best Time to Buy and Sell Stock | Arrays / Sliding Window |
+| 121 | Best Time to Buy and Sell Stock | Greedy / Running Minimum |
 
 ### Medium
 
