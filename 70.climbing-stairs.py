@@ -1,55 +1,94 @@
-# 70. Climbing Stairs
-# https://leetcode.com/problems/climbing-stairs/
-# Difficulty: Easy
-# Topic: Dynamic Programming (Fibonacci pattern)
 #
-# Problem:
-#   You can climb 1 or 2 steps at a time.
-#   How many distinct ways can you climb to the top of an n-step staircase?
+# @lc app=leetcode id=70 lang=python3
 #
-# Examples:
-#   n=2 → 2  (1+1, 2)
-#   n=3 → 3  (1+1+1, 1+2, 2+1)
+# [70] Climbing Stairs
 #
-# Key insight: ways(n) = ways(n-1) + ways(n-2)  — it IS Fibonacci.
-#   ways(n-1): we were one step below, took 1 step.
-#   ways(n-2): we were two steps below, took 2 steps.
+# https://leetcode.com/problems/climbing-stairs/description/
 #
-# Approach: Space-optimised DP — only keep the last two values.
-# Time:  O(n)
-# Space: O(1)
+# algorithms
+# Easy (53.68%)
+# Likes:    24779
+# Dislikes: 1054
+# Total Accepted:    5.4M
+# Total Submissions: 10M
+# Testcase Example:  '2'
+#
+# You are climbing a staircase. It takes n steps to reach the top.
+# 
+# Each time you can either climb 1 or 2 steps. In how many distinct ways can
+# you climb to the top?
+# 
+# 
+# Example 1:
+# 
+# 
+# Input: n = 2
+# Output: 2
+# Explanation: There are two ways to climb to the top.
+# 1. 1 step + 1 step
+# 2. 2 steps
+# 
+# 
+# Example 2:
+# 
+# 
+# Input: n = 3
+# Output: 3
+# Explanation: There are three ways to climb to the top.
+# 1. 1 step + 1 step + 1 step
+# 2. 1 step + 2 steps
+# 3. 2 steps + 1 step
+# 
+# 
+# 
+# Constraints:
+# 
+# 
+# 1 <= n <= 45
+# 
+# 
+#
 
-
+# @lc code=start
 class Solution:
     def climbStairs(self, n: int) -> int:
         if n <= 2:
             return n
-        prev2, prev1 = 1, 2          # ways(1), ways(2)
-        for _ in range(3, n + 1):
-            prev2, prev1 = prev1, prev2 + prev1
-        return prev1
 
+        dp = [0] * (n + 1)
+        dp[1] = 1
+        dp[2] = 2
+        
+        for step in range(3, n + 1):
+            dp[step] = dp[step - 1] + dp[step - 2]
+            
+        return dp[n]
+    
+        # two_steps_before = 1
+        # one_step_before = 2
 
-# ---------------------------------------------------------------------------
-# Interview talking point
-# ---------------------------------------------------------------------------
-# "This reduces to Fibonacci. At each step k, the number of ways equals
-#  ways(k-1) + ways(k-2) because those are the only two positions we could
-#  have been standing on just before arriving at k.
-#  I use two variables instead of an array to keep space O(1).
-#  Base cases: n=1 → 1 way, n=2 → 2 ways, then iterate up to n."
-#
-# Brute-force comparison (O(2^n) — mention to show you know the trade-off):
-#   def climbStairs(self, n):
-#       if n <= 1: return 1
-#       return self.climbStairs(n-1) + self.climbStairs(n-2)
-# ---------------------------------------------------------------------------
+        # for step in range(3, n + 1):
+        #     current = two_steps_before + one_step_before
+        #     two_steps_before = one_step_before
+        #     one_step_before = current
 
+        # return one_step_before
+    
+        
+    # Complexity:
+    # Time: O(n), because the loop calculates dp[3] through dp[n], and each step
+    # takes constant time by adding two values that are already stored.
+    # Space: O(n), because dp stores one answer for every step from 0 through n.
+    #
+    # Why this is dynamic programming:
+    # dp[step] represents the number of ways to reach this step. To reach step,
+    # the last move must come from either step - 1 or step - 2, so the recurrence
+    # is dp[step] = dp[step - 1] + dp[step - 2]. This problem has overlapping
+    # subproblems because the same smaller step counts are needed repeatedly, and
+    # it has optimal substructure because each answer is built from smaller answers.
+    # To recognize DP here, look for a question asking for the number of ways to
+    # reach a state where each move has limited choices and earlier results can be
+    # reused to calculate the next result.
 
-if __name__ == "__main__":
-    s = Solution()
-    print(s.climbStairs(1))   # 1
-    print(s.climbStairs(2))   # 2
-    print(s.climbStairs(3))   # 3
-    print(s.climbStairs(5))   # 8
-    print(s.climbStairs(10))  # 89
+# @lc code=end
+
