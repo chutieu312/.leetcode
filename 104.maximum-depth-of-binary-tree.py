@@ -1,76 +1,71 @@
-# 104. Maximum Depth of Binary Tree
-# https://leetcode.com/problems/maximum-depth-of-binary-tree/
-# Difficulty: Easy
-# Topic: Trees / DFS / BFS
 #
-# Problem:
-#   Given the root of a binary tree, return its maximum depth (number of nodes
-#   along the longest root-to-leaf path).
+# @lc app=leetcode id=104 lang=python3
 #
-# Example:
-#       3
-#      / \
-#     9  20
-#        / \
-#       15   7
-#   Output: 3
+# [104] Maximum Depth of Binary Tree
 #
-# Approach A (recursive DFS): depth = 1 + max(left_depth, right_depth)
-# Approach B (iterative BFS): count levels while queue is non-empty.
-# Time:  O(n)
-# Space: O(h) — h = tree height (O(log n) balanced, O(n) worst-case)
+# https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
+#
+# algorithms
+# Easy (77.47%)
+# Likes:    14489
+# Dislikes: 298
+# Total Accepted:    5M
+# Total Submissions: 6.4M
+# Testcase Example:  '[3,9,20,null,null,15,7]'
+#
+# Given the root of a binary tree, return its maximum depth.
+# 
+# A binary tree's maximum depth is the number of nodes along the longest path
+# from the root node down to the farthest leaf node.
+# 
+# 
+# Example 1:
+# 
+# 
+# Input: root = [3,9,20,null,null,15,7]
+# Output: 3
+# 
+# 
+# Example 2:
+# 
+# 
+# Input: root = [1,null,2]
+# Output: 2
+# 
+# 
+# 
+# Constraints:
+# 
+# 
+# The number of nodes in the tree is in the range [0, 10^4].
+# -100 <= Node.val <= 100
+# 
+# 
+#
 
-from typing import Optional
-from collections import deque
-
-
-class TreeNode:
-    def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+# @lc code=start
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
 
 
 class Solution:
-    # --- Approach A: recursive DFS (most concise) ---
     def maxDepth(self, root: Optional[TreeNode]) -> int:
+        
         if not root:
             return 0
-        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+        
+        left_d = self.maxDepth(root.left)
+        right_d = self.maxDepth(root.right)
+        
+        return 1 + max(left_d, right_d)
+        
+        
+# Time: O(n), where n is the number of nodes; every node is visited once.
+# Space: O(h), where h is the tree height; the recursion stack follows one path.
+# A balanced tree has h = O(log n); a completely skewed tree has h = O(n).
+# @lc code=end
 
-    # --- Approach B: iterative BFS (good to mention in interviews) ---
-    def maxDepth_bfs(self, root: Optional[TreeNode]) -> int:
-        if not root:
-            return 0
-        queue = deque([root])
-        depth = 0
-        while queue:
-            depth += 1
-            for _ in range(len(queue)):   # process one full level at a time
-                node = queue.popleft()
-                if node.left:
-                    queue.append(node.left)
-                if node.right:
-                    queue.append(node.right)
-        return depth
-
-
-# ---------------------------------------------------------------------------
-# Interview talking point
-# ---------------------------------------------------------------------------
-# "The recursive solution reads almost like the definition: the depth of an
-#  empty tree is 0; otherwise it's 1 (current node) plus the deeper of the
-#  two subtrees. I can also do it iteratively with BFS — I count how many
-#  levels I dequeue before the queue empties. Both are O(n) time.
-#  I default to recursive for clarity, but BFS avoids stack-overflow risk
-#  on very deep trees."
-# ---------------------------------------------------------------------------
-
-
-# Quick smoke test
-if __name__ == "__main__":
-    root = TreeNode(3, TreeNode(9), TreeNode(20, TreeNode(15), TreeNode(7)))
-    s = Solution()
-    print(s.maxDepth(root))      # 3
-    print(s.maxDepth_bfs(root))  # 3
-    print(s.maxDepth(None))      # 0
