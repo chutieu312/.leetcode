@@ -1,62 +1,81 @@
-# 3. Longest Substring Without Repeating Characters
-# https://leetcode.com/problems/longest-substring-without-repeating-characters/
-# Difficulty: Medium
-# Topic: Sliding Window / Hash Map
 #
-# Problem:
-#   Given a string s, find the length of the longest substring that contains
-#   no repeating characters.
+# @lc app=leetcode id=3 lang=python3
 #
-# Examples:
-#   "abcabcbb" → 3  ("abc")
-#   "bbbbb"    → 1  ("b")
-#   "pwwkew"   → 3  ("wke")
+# [3] Longest Substring Without Repeating Characters
 #
-# Approach: Sliding window with a dict that maps char → its last-seen index.
-#   - right pointer expands the window one char at a time.
-#   - If s[right] was seen and its last index is inside the window, jump left
-#     to last_index + 1 (shrink window to remove the duplicate).
-#   - Track the max window size seen.
+# https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
 #
-# Time:  O(n)
-# Space: O(min(n, alphabet_size)) — at most 128 entries for ASCII
+# algorithms
+# Medium (37.53%)
+# Likes:    45389
+# Dislikes: 2228
+# Total Accepted:    9.9M
+# Total Submissions: 25.1M
+# Testcase Example:  '"abcabcbb"'
+#
+# Given a string s, find the length of the longest substring without duplicate
+# characters.
+# 
+# 
+# Example 1:
+# 
+# 
+# Input: s = "abcabcbb"
+# Output: 3
+# Explanation: The answer is "abc", with the length of 3. Note that "bca" and
+# "cab" are also correct answers.
+# 
+# 
+# Example 2:
+# 
+# 
+# Input: s = "bbbbb"
+# Output: 1
+# Explanation: The answer is "b", with the length of 1.
+# 
+# 
+# Example 3:
+# 
+# 
+# Input: s = "pwwkew"
+# Output: 3
+# Explanation: The answer is "wke", with the length of 3.
+# Notice that the answer must be a substring, "pwke" is a subsequence and not a
+# substring.
+# 
+# 
+# 
+# Constraints:
+# 
+# 
+# 0 <= s.length <= 5 * 10^4
+# s consists of English letters, digits, symbols and spaces.
+# 
+# 
+#
 
-
+# @lc code=start
 class Solution:
     def lengthOfLongestSubstring(self, s: str) -> int:
-        last_seen = {}   # char -> most recent index
+        
         left = 0
-        max_len = 0
+        longest = 0
+        window = set()
+        
+        for right in range(len(s)):
+            while s[right] in window:
+                window.remove(s[left])
+                left+= 1
+                
+            window.add(s[right])
+            
+            current_length = right - left + 1
+            longest = max(longest, current_length)
+            
+        return longest
+ 
+#  Time: O(n), because each character enters and leaves the window at most once.
+# Space: O(k), where k is the number of different characters.       
+        
+# @lc code=end
 
-        for right, ch in enumerate(s):
-            if ch in last_seen and last_seen[ch] >= left:
-                # duplicate is inside current window — shrink from the left
-                left = last_seen[ch] + 1
-            last_seen[ch] = right
-            max_len = max(max_len, right - left + 1)
-
-        return max_len
-
-
-# ---------------------------------------------------------------------------
-# Interview talking point
-# ---------------------------------------------------------------------------
-# "I use a sliding window. The right pointer always moves forward; the dict
-#  stores where each character was last seen. When I encounter a repeat that's
-#  still inside my window, I move left just past the previous occurrence —
-#  that's the smallest shrink that removes the duplicate.
-#  One pass, O(n) time, O(1) space for fixed alphabets."
-#
-# Common mistake to mention: checking 'if ch in last_seen' WITHOUT the
-# 'last_seen[ch] >= left' guard can incorrectly shrink the window when the
-# duplicate is to the left of the current window.
-# ---------------------------------------------------------------------------
-
-
-if __name__ == "__main__":
-    s = Solution()
-    print(s.lengthOfLongestSubstring("abcabcbb"))  # 3
-    print(s.lengthOfLongestSubstring("bbbbb"))     # 1
-    print(s.lengthOfLongestSubstring("pwwkew"))    # 3
-    print(s.lengthOfLongestSubstring(""))          # 0
-    print(s.lengthOfLongestSubstring("au"))        # 2
